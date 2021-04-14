@@ -20,9 +20,22 @@ attribute vec2 a_Texcoord0;
 #ifdef COLOR
 	varying vec4 v_Color;
 #endif
+
+#ifdef _SCROLL2TEXBLEND_ON
+varying vec4 v_Texcoord0;
+#else
 varying vec2 v_Texcoord0;
+#endif
 
 uniform vec4 u_TilingOffset;
+
+#ifdef _SCROLL2TEXBLEND_ON
+	// uniform vec4 _MainTex_ST;
+	uniform vec2 _MainTex_Scroll;
+	uniform vec4 _SubTex_ST;
+	uniform vec2 _SubTex_Scroll;
+	uniform float u_Time;
+#endif
 
 #ifdef BONE
 	const int c_MaxBoneCount = 24;
@@ -65,8 +78,11 @@ void main()
 		gl_Position = u_MvpMatrix * position;
 	#endif
 	
-	v_Texcoord0=TransformUV(a_Texcoord0,u_TilingOffset);
-		
+	v_Texcoord0.xy=TransformUV(a_Texcoord0,u_TilingOffset);
+	#ifdef _SCROLL2TEXBLEND_ON
+		v_Texcoord0.zw=TransformUV(a_Texcoord0,_SubTex_ST);
+		v_Texcoord0 += fract(vec4(_MainTex_Scroll.x, -_MainTex_Scroll.y, _SubTex_Scroll.x, -_SubTex_Scroll.y) * u_Time * 0.05);
+	#endif
 	#ifdef COLOR
 		v_Color = a_Color;
 	#endif

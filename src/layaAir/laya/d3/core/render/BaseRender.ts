@@ -25,6 +25,7 @@ import { ReflectionProbe, ReflectionProbeMode } from "../reflectionProbe/Reflect
  * <code>Render</code> 类用于渲染器的父类，抽象类不允许实例。
  */
 export class BaseRender extends EventDispatcher implements ISingletonElement, IOctreeObject {
+	public _AOV_lastCullingAtFrame = -1;
 	/**@internal */
 	static _tempBoundBoxCorners: Vector3[] = [new Vector3(), new Vector3(), new Vector3(), new Vector3(), new Vector3(), new Vector3(), new Vector3(), new Vector3()];
 

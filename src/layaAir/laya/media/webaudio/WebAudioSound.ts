@@ -178,6 +178,7 @@ export class WebAudioSound extends EventDispatcher {
         WebAudioSound.__loadingSound[url] = true;
 
         var request: any = new XMLHttpRequest();
+        request._noVConsole = true;
         request.open("GET", url, true);
         request.responseType = "arraybuffer";
         request.onload = function (): void {

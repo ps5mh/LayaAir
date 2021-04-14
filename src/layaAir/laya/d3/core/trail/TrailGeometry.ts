@@ -197,7 +197,8 @@ export class TrailGeometry extends GeometryElement {
 				Vector3.transformCoordinate(position, cameraMatrix, TrailGeometry._tempVector33);
 				Vector3.transformCoordinate(this._lastFixedVertexPosition, cameraMatrix, TrailGeometry._tempVector34);
 				Vector3.subtract(TrailGeometry._tempVector33, TrailGeometry._tempVector34, delVector3);
-				Vector3.cross(TrailGeometry._tempVector33, delVector3, pointAtoBVector3);
+				// Vector3.cross(TrailGeometry._tempVector33, delVector3, pointAtoBVector3);
+				Vector3.cross(Vector3._UnitY, delVector3, pointAtoBVector3);
 				break;
 			case TrailAlignment.TransformZ:
 				Vector3.subtract(position, this._lastFixedVertexPosition, delVector3);
@@ -263,7 +264,7 @@ export class TrailGeometry extends GeometryElement {
 		this._vertices1[vertexOffset + 4] = -pointAtoBVector3.y;
 		this._vertices1[vertexOffset + 5] = -pointAtoBVector3.z;
 		this._vertices1[vertexOffset + 6] = curtime;
-		this._vertices1[vertexOffset + 7] = 1.0;
+		this._vertices1[vertexOffset + 7] = 0.0;
 
 		this._vertices1[vertexOffset + 8] = position.x;
 		this._vertices1[vertexOffset + 9] = position.y;
@@ -272,7 +273,7 @@ export class TrailGeometry extends GeometryElement {
 		this._vertices1[vertexOffset + 12] = pointAtoBVector3.y;
 		this._vertices1[vertexOffset + 13] = pointAtoBVector3.z;
 		this._vertices1[vertexOffset + 14] = curtime;
-		this._vertices1[vertexOffset + 15] = 0.0;
+		this._vertices1[vertexOffset + 15] = 1.0;
 
 		//添加新的顶点时，需要更新包围盒
 		var bounds: Bounds = this._owner._owner.trailRenderer.bounds;

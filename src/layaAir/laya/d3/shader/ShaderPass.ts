@@ -261,6 +261,10 @@ export class ShaderPass extends ShaderCompile {
 		for (var i: number = 0; i < maxEndIndex; i++) {
 			var subMask: number = endIndex < i ? 0 : mask[i];
 			var subCacheShaders = cacheShaders[subMask];
+			// modified by AOV, shorter shader mask lenth should return early.
+			if (endIndex === i && subCacheShaders instanceof ShaderInstance) {
+				return subCacheShaders;
+			}
 			(subCacheShaders) || (cacheShaders[subMask] = subCacheShaders = {});
 			cacheShaders = subCacheShaders;
 		}

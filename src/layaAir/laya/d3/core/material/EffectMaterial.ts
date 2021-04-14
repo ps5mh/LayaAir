@@ -20,11 +20,19 @@ export class EffectMaterial extends Material {
 	/**@internal */
 	static SHADERDEFINE_ADDTIVEFOG: ShaderDefine;
 	/**@internal */
+	static SHADERDEFINE_SUBTEXTURE: ShaderDefine;
+	/**@internal */
 	static MAINTEXTURE: number = Shader3D.propertyNameToID("u_AlbedoTexture");
 	/**@internal */
 	static TINTCOLOR: number = Shader3D.propertyNameToID("u_AlbedoColor");
 	/**@internal */
 	static TILINGOFFSET: number = Shader3D.propertyNameToID("u_TilingOffset");
+
+	static _SUBTEX = Shader3D.propertyNameToID("_SubTex");
+	static _SUBTEX_ST = Shader3D.propertyNameToID("_SubTex_ST");
+	static _SUBTEX_SCROLL = Shader3D.propertyNameToID("_SubTex_Scroll");
+	static _SUBTEX_PERTURBATION = Shader3D.propertyNameToID("_SubTex_Perturbation");
+	static _MAINTEX_SCROLL = Shader3D.propertyNameToID("_MainTex_Scroll");
 
 	/**
 	 * @internal
@@ -32,6 +40,7 @@ export class EffectMaterial extends Material {
 	static __initDefine__(): void {
 		EffectMaterial.SHADERDEFINE_MAINTEXTURE = Shader3D.getDefineByName("MAINTEXTURE");
 		EffectMaterial.SHADERDEFINE_ADDTIVEFOG = Shader3D.getDefineByName("ADDTIVEFOG");
+		EffectMaterial.SHADERDEFINE_SUBTEXTURE = Shader3D.getDefineByName("SUBTEXTURE");
 	}
 
 
@@ -325,6 +334,20 @@ export class EffectMaterial extends Material {
 		else {
 			this._shaderValues.getVector(EffectMaterial.TILINGOFFSET).setValue(1.0, 1.0, 0.0, 0.0);
 		}
+	}
+
+	set _SubTex(v: any) {
+		if (v)
+			this._shaderValues.addDefine(EffectMaterial.SHADERDEFINE_SUBTEXTURE);
+		else
+			this._shaderValues.removeDefine(EffectMaterial.SHADERDEFINE_SUBTEXTURE);
+		this._shaderValues.setTexture(EffectMaterial._SUBTEX, v);
+	}
+	set _SubTex_ST(v: any) { this._shaderValues.setVector(EffectMaterial._SUBTEX_ST, v); }
+	set _SubTex_Scroll(v: any) { this._shaderValues.setVector(EffectMaterial._SUBTEX_SCROLL, v); }
+	set _SubTex_Perturbation(v: any) { this._shaderValues.setNumber(EffectMaterial._SUBTEX_PERTURBATION, v); }
+	set _MainTex_Scroll(v: any) {
+		this._shaderValues.setVector(EffectMaterial._MAINTEX_SCROLL, v);
 	}
 
 

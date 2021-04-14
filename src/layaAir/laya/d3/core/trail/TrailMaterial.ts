@@ -19,10 +19,17 @@ export class TrailMaterial extends Material {
 
 	static SHADERDEFINE_MAINTEXTURE: ShaderDefine;
 	static SHADERDEFINE_ADDTIVEFOG: ShaderDefine;
+	static SHADERDEFINE_SUBTEXTURE: ShaderDefine;
 
 	static MAINTEXTURE: number = Shader3D.propertyNameToID("u_MainTexture");
 	static TINTCOLOR: number = Shader3D.propertyNameToID("u_MainColor");
 	static TILINGOFFSET: number = Shader3D.propertyNameToID("u_TilingOffset");
+
+	static _SUBTEX = Shader3D.propertyNameToID("_SubTex");
+	static _SUBTEX_ST = Shader3D.propertyNameToID("_SubTex_ST");
+	static _SUBTEX_SCROLL = Shader3D.propertyNameToID("_SubTex_Scroll");
+	static _SUBTEX_PERTURBATION = Shader3D.propertyNameToID("_SubTex_Perturbation");
+	static _MAINTEX_SCROLL = Shader3D.propertyNameToID("_MainTex_Scroll");
 
 
 	/**
@@ -31,6 +38,7 @@ export class TrailMaterial extends Material {
 	static __initDefine__(): void {
 		TrailMaterial.SHADERDEFINE_MAINTEXTURE = Shader3D.getDefineByName("MAINTEXTURE");
 		TrailMaterial.SHADERDEFINE_ADDTIVEFOG = Shader3D.getDefineByName("ADDTIVEFOG");
+		TrailMaterial.SHADERDEFINE_SUBTEXTURE = Shader3D.getDefineByName("SUBTEXTURE");
 	}
 
 	/**@internal */
@@ -375,6 +383,18 @@ export class TrailMaterial extends Material {
 			this._shaderValues.getVector(TrailMaterial.TILINGOFFSET).setValue(1.0, 1.0, 0.0, 0.0);
 		}
 	}
+
+	set _SubTex(v: any) {
+		if (v)
+			this._shaderValues.addDefine(TrailMaterial.SHADERDEFINE_SUBTEXTURE);
+		else
+			this._shaderValues.removeDefine(TrailMaterial.SHADERDEFINE_SUBTEXTURE);
+		this._shaderValues.setTexture(TrailMaterial._SUBTEX, v);
+	}
+	set _SubTex_ST(v: any) { this._shaderValues.setVector(TrailMaterial._SUBTEX_ST, v); }
+	set _SubTex_Scroll(v: any) { this._shaderValues.setVector(TrailMaterial._SUBTEX_SCROLL, v); }
+	set _SubTex_Perturbation(v: any) { this._shaderValues.setNumber(TrailMaterial._SUBTEX_PERTURBATION, v); }
+	set _MainTex_Scroll(v: any) { this._shaderValues.setVector(TrailMaterial._MAINTEX_SCROLL, v); }
 
 	constructor() {
 		super();

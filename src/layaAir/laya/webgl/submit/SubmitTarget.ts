@@ -64,6 +64,7 @@ export class SubmitTarget implements ISubmit {
         if ((--this._ref) < 1) {
             var pool: any = SubmitTarget.POOL;
             pool[pool._length++] = this;
+            // this.shaderValue.release();
         }
     }
 

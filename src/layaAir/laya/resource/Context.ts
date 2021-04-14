@@ -1053,14 +1053,17 @@ export class Context {
 	}
 
 	/**@internal */
-	_drawTextureM(tex: Texture, x: number, y: number, width: number, height: number, m: Matrix, alpha: number, uv: any[]|null): boolean {
+	_drawTextureM(tex: any, x: number, y: number, width: number, height: number, m: Matrix, alpha: number, uv: any[]|null): boolean {
 		// 注意sprite要保存，因为后面会被冲掉
-		var cs = this.sprite;
-		if (!tex._getSource(function (): void {
-			if (cs) {
-				cs.repaint();	// 原来是calllater，callater对于cacheas normal是没有机会执行的
+		var cs = this.sprite, cb;
+		if (!tex._bitmap || tex._bitmap.destroyed) {
+			cb = function () {
+				if (cs) {
+					cs.repaint();
+				}
 			}
-		})) { //source内调用tex.active();
+		}
+		if (!tex._getSource(cb)) { //source内调用tex.active();
 			return false;
 		}
 

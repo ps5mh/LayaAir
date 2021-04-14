@@ -21,7 +21,8 @@ export class CallLater {
         if (len > 0) {
             for (let i = 0, n = len - 1; i <= n; i++) {
                 let handler = laters[i];
-                this._map[handler.key] = null;
+                // this._map[handler.key] = null;
+                delete this._map[handler.key];
                 if (handler.method !== null) {
                     handler.run();
                     handler.clear();
@@ -37,7 +38,8 @@ export class CallLater {
     private _getHandler(caller: any, method: any): LaterHandler {
         var cid: number = caller ? caller.$_GID || (caller.$_GID = ILaya.Utils.getGID()) : 0;
         var mid: number = method.$_TID || (method.$_TID = (ILaya.Timer._mid++) );
-        return this._map[cid+'.'+mid]
+        // return this._map[cid+'.'+mid]
+        return this._map[cid + mid * 100000];
     }
 
     /**
@@ -60,7 +62,8 @@ export class CallLater {
             //索引handler
             var cid: number = caller ? caller.$_GID : 0;
             var mid: number = (method as any)["$_TID"];
-            handler.key = cid +'.'+ mid;
+            // handler.key = cid +'.'+ mid;
+            handler.key = cid + mid * 100000
             this._map[handler.key] = handler
             //插入队列
             this._laters.push(handler);
@@ -75,7 +78,8 @@ export class CallLater {
     runCallLater(caller: any, method: Function): void {
         var handler = this._getHandler(caller, method);
         if (handler && handler.method != null) {
-            this._map[handler.key] = null;
+            // this._map[handler.key] = null;
+            delete this._map[handler.key];
             handler.run();
             handler.clear();
         }
@@ -86,7 +90,7 @@ export class CallLater {
 
 /** @private */
 class LaterHandler {
-    key: string;
+    key: number;
     caller: any
     method: Function;
     args: any[];

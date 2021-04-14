@@ -47,6 +47,13 @@ varying vec4 v_Color;
 #ifdef DIFFUSEMAP
 	varying vec2 v_TextureCoordinate;
 #endif
+#if defined _SCROLL2TEXBLEND_ON || defined SUBTEXTURE
+	uniform vec2 _MainTex_Scroll;
+	uniform vec4 _SubTex_ST;
+	uniform vec2 _SubTex_Scroll;
+	uniform float u_Time;
+	varying vec2 v_Texcoord1;
+#endif
 
 uniform float u_CurrentTime;
 uniform vec3 u_Gravity;
@@ -757,11 +764,17 @@ void main()
 			#if defined(SPHERHBILLBOARD)||defined(STRETCHEDBILLBOARD)||defined(HORIZONTALBILLBOARD)||defined(VERTICALBILLBOARD)
 				v_TextureCoordinate =computeParticleUV(a_CornerTextureCoordinate.zw, normalizedAge);
 			#endif
+			#ifdef _SCROLL2TEXBLEND_ON
+				v_Texcoord1=TransformUV(v_TextureCoordinate,_SubTex_ST);
+				v_Texcoord1 += fract(vec2(_SubTex_Scroll.x, -_SubTex_Scroll.y) * u_Time * 0.05);
+			#endif
 			#ifdef RENDERMODE_MESH
 				v_TextureCoordinate =computeParticleUV(a_MeshTextureCoordinate, normalizedAge);
 			#endif
-			
 			v_TextureCoordinate=TransformUV(v_TextureCoordinate,u_TilingOffset);
+			#ifdef _SCROLL2TEXBLEND_ON
+				v_TextureCoordinate += fract(vec2(_MainTex_Scroll.x, -_MainTex_Scroll.y) * u_Time * 0.05);
+			#endif
 		#endif
    	}
    	else

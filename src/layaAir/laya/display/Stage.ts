@@ -423,9 +423,13 @@ export class Stage extends Sprite {
 		}
 
 		//处理canvas大小			
-		canvas.size(canvasWidth, canvasHeight);
-		RunDriver.changeWebGLSize(canvasWidth, canvasHeight);
-		mat.scale(realWidth / canvasWidth / pixelRatio, realHeight / canvasHeight / pixelRatio);
+		// canvas.size(canvasWidth, canvasHeight);
+		// RunDriver.changeWebGLSize(canvasWidth, canvasHeight);
+		// mat.scale(realWidth / canvasWidth / pixelRatio, realHeight / canvasHeight / pixelRatio);
+		const AOVCanvasRenderScale = (window as any).Laya.Config3D._config._AOV_canvasRanderScale || 1;
+		canvas.size(canvasWidth * AOVCanvasRenderScale, canvasHeight * AOVCanvasRenderScale);
+		RunDriver.changeWebGLSize(canvasWidth * AOVCanvasRenderScale, canvasHeight * AOVCanvasRenderScale);
+		mat.scale(realWidth / canvasWidth / pixelRatio / AOVCanvasRenderScale, realHeight / canvasHeight / pixelRatio / AOVCanvasRenderScale);
 
 		//处理水平对齐
 		if (this._alignH === Stage.ALIGN_LEFT) this.offset.x = 0;

@@ -19,6 +19,9 @@ import { Shader3D } from "../shader/Shader3D";
 import { Utils3D } from "../utils/Utils3D";
 import { Bounds } from "../core/Bounds";
 import { BoundSphere } from "../math/BoundSphere";
+import { Config3D } from "../../../Config3D";
+import { TrailRenderer } from "../core/trail/TrailRenderer";
+import { ShurikenParticleRenderer } from "../core/particleShuriKen/ShurikenParticleRenderer";
 
 
 /**
@@ -62,6 +65,8 @@ export class FrustumCulling {
 	/**@internal */
 	static debugFrustumCulling: boolean = false;
 
+	static toRenderParticles = 0;
+
 	/**
 	 * @internal
 	 */
@@ -92,8 +97,14 @@ export class FrustumCulling {
 		var camPos: Vector3 = cameraCullInfo.position;
 		var cullMask: number = cameraCullInfo.cullingMask;
 		var loopCount: number = Stat.loopCount;
+		var cullingPartitions = Config3D._config._AOV_cullingPartitions;
 		for (var i: number = 0, n: number = renderList.length; i < n; i++) {
 			var render: BaseRender = <BaseRender>renders[i];
+			let skipCulling = i % cullingPartitions !== loopCount % cullingPartitions
+				&& loopCount - render._AOV_lastCullingAtFrame < cullingPartitions;
+			if (skipCulling && render._renderMark < 0) {
+				continue;
+			}
 			var canPass: boolean;
 			if (isShadowCasterCull)
 				canPass = render._castShadow && render._enable;
@@ -101,13 +112,22 @@ export class FrustumCulling {
 				canPass = ((Math.pow(2, render._owner._layer) & cullMask) != 0) && render._enable;
 
 			if (canPass) {
+				if (!skipCulling) {
+					render._AOV_lastCullingAtFrame = loopCount
+				}
 				Stat.frustumCulling++;
-				if (!cameraCullInfo.useOcclusionCulling || render._needRender(boundFrustum, context)) {
+				if (!cameraCullInfo.useOcclusionCulling || (skipCulling && !(render instanceof TrailRenderer))
+					|| render._needRender(boundFrustum, context)) {
+					if (render instanceof ShurikenParticleRenderer) {
+						FrustumCulling.toRenderParticles++;
+					}
 					render._renderMark = loopCount;
 					render._distanceForSort = Vector3.distance(render.bounds.getCenter(), camPos);//TODO:合并计算浪费,或者合并后取平均值
 					var elements: RenderElement[] = render._renderElements;
 					for (var j: number = 0, m: number = elements.length; j < m; j++)
 						elements[j]._update(scene, context, customShader, replacementTag);
+				} else {
+					render._renderMark = -2;
 				}
 			}
 		}

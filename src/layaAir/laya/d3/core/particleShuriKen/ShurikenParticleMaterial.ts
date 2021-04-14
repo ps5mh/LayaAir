@@ -21,6 +21,7 @@ export class ShurikenParticleMaterial extends Material {
 	static SHADERDEFINE_TINTCOLOR: ShaderDefine;
 	/**@interanl */
 	static SHADERDEFINE_ADDTIVEFOG: ShaderDefine;
+	static SHADERDEFINE_SUBTEXTURE: ShaderDefine;
 
 	/**@internal */
 	static DIFFUSETEXTURE: number = Shader3D.propertyNameToID("u_texture");
@@ -28,6 +29,13 @@ export class ShurikenParticleMaterial extends Material {
 	static TINTCOLOR: number = Shader3D.propertyNameToID("u_Tintcolor");
 	/**@internal */
 	static TILINGOFFSET: number = Shader3D.propertyNameToID("u_TilingOffset");
+
+	static _SUBTEX = Shader3D.propertyNameToID("_SubTex");
+	static _SUBTEX_ST = Shader3D.propertyNameToID("_SubTex_ST");
+	static _SUBTEX_SCROLL = Shader3D.propertyNameToID("_SubTex_Scroll");
+	static _SUBTEX_PERTURBATION = Shader3D.propertyNameToID("_SubTex_Perturbation");
+	static _MAINTEX_SCROLL = Shader3D.propertyNameToID("_MainTex_Scroll");
+
 
 	/** 默认材质，禁止修改*/
 	static defaultMaterial: ShurikenParticleMaterial;
@@ -39,6 +47,7 @@ export class ShurikenParticleMaterial extends Material {
 		ShurikenParticleMaterial.SHADERDEFINE_DIFFUSEMAP = Shader3D.getDefineByName("DIFFUSEMAP");
 		ShurikenParticleMaterial.SHADERDEFINE_TINTCOLOR = Shader3D.getDefineByName("TINTCOLOR");
 		ShurikenParticleMaterial.SHADERDEFINE_ADDTIVEFOG = Shader3D.getDefineByName("ADDTIVEFOG");
+		ShurikenParticleMaterial.SHADERDEFINE_SUBTEXTURE = Shader3D.getDefineByName("SUBTEXTURE");
 	}
 
 	/**@internal */
@@ -363,6 +372,18 @@ export class ShurikenParticleMaterial extends Material {
 
 		this._shaderValues.setTexture(ShurikenParticleMaterial.DIFFUSETEXTURE, value);
 	}
+
+	set _SubTex(v: any) {
+		if (v)
+			this._shaderValues.addDefine(ShurikenParticleMaterial.SHADERDEFINE_SUBTEXTURE);
+		else
+			this._shaderValues.removeDefine(ShurikenParticleMaterial.SHADERDEFINE_SUBTEXTURE);
+		this._shaderValues.setTexture(ShurikenParticleMaterial._SUBTEX, v);
+	}
+	set _SubTex_ST(v: any) { this._shaderValues.setVector(ShurikenParticleMaterial._SUBTEX_ST, v); }
+	set _SubTex_Scroll(v: any) { this._shaderValues.setVector(ShurikenParticleMaterial._SUBTEX_SCROLL, v); }
+	set _SubTex_Perturbation(v: any) { this._shaderValues.setNumber(ShurikenParticleMaterial._SUBTEX_PERTURBATION, v); }
+	set _MainTex_Scroll(v: any) { this._shaderValues.setVector(ShurikenParticleMaterial._MAINTEX_SCROLL, v); }
 
 
 	/**

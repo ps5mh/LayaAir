@@ -60,7 +60,10 @@ export class MouseManager {
     private _touchIDs: any = {};
     private _curTouchID: number = NaN;
     private _id: number = 1;
+    private __AOV_THIS_FRAME_TOUCH_IDENTIFIERS = new Set();
+    private __AOV_LAST_HANDLE_TOUCH_FRAME = 0;
     private static _isFirstTouch: boolean = true;
+
     /**
      * @private
      * 初始化。
@@ -422,10 +425,19 @@ export class MouseManager {
                 break;
             case "touchmove":
                 var touchemoves: any[] = evt.changedTouches;
+                this.__AOV_THIS_FRAME_TOUCH_IDENTIFIERS = this.__AOV_THIS_FRAME_TOUCH_IDENTIFIERS || new Set();
+                if (this.__AOV_LAST_HANDLE_TOUCH_FRAME !== ILaya.timer.currFrame) {
+                    this.__AOV_THIS_FRAME_TOUCH_IDENTIFIERS.clear()
+                }
+                this.__AOV_LAST_HANDLE_TOUCH_FRAME = ILaya.timer.currFrame;
                 for (i = 0, n = touchemoves.length; i < n; i++) {
                     touch = touchemoves[i];
                     //是否禁用多点触控
                     if (MouseManager.multiTouchEnabled || touch.identifier == this._curTouchID) {
+                        if (this.__AOV_THIS_FRAME_TOUCH_IDENTIFIERS.has(touch.identifier)) {
+                            continue;
+                        }
+                        this.__AOV_THIS_FRAME_TOUCH_IDENTIFIERS.add(touch.identifier)
                         this.initEvent(touch, evt);
                         this._checkAllBaseUI(this.mouseX, this.mouseY, this.onMouseMove);
                     }

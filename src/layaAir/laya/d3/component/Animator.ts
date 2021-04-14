@@ -64,6 +64,7 @@ export class Animator extends Component {
 	private _updateMark: number;
 	/**@internal */
 	private _controllerLayers: AnimatorControllerLayer[];
+	private _forceRenderOnce = false;
 
 	/**@internal */
 	_linkSprites: any;
@@ -882,8 +883,9 @@ export class Animator extends Component {
 		if (this.cullingMode === Animator.CULLINGMODE_CULLCOMPLETELY) {//所有渲染精灵不可见时
 			needRender = false;
 			for (var i: number = 0, n: number = this._renderableSprites.length; i < n; i++) {
-				if (this._renderableSprites[i]._render.isRender) {
+				if (this._renderableSprites[i]._render.isRender || this._forceRenderOnce) {
 					needRender = true;
+					this._forceRenderOnce = false;
 					break;
 				}
 			}
@@ -1066,6 +1068,7 @@ export class Animator extends Component {
 	play(name: string|null = null, layerIndex: number = 0, normalizedTime: number = Number.NEGATIVE_INFINITY): void {
 		var controllerLayer: AnimatorControllerLayer = this._controllerLayers[layerIndex];
 		if (controllerLayer) {
+			this._forceRenderOnce = true;
 			var defaultState: AnimatorState = controllerLayer.defaultState;
 			if (!name && !defaultState)
 				throw new Error("Animator:must have default clip value,please set clip property.");
@@ -1216,7 +1219,9 @@ export class Animator extends Component {
 				}
 				controllerLayer._crossNodesOwnersCount = crossCount;
 				controllerLayer._crossPlayState = destAnimatorState;
-				controllerLayer._crossDuration = srcAnimatorState!._clip!._duration * transitionDuration;
+				// --bug=78479557 【英雄】爱里移动释放大招，大招的动作会更快，原地放大，大招动作很慢
+				// controllerLayer._crossDuration = srcAnimatorState!._clip!._duration * transitionDuration;
+				controllerLayer._crossDuration = transitionDuration;
 				if (normalizedTime !== Number.NEGATIVE_INFINITY)
 					crossPlayStateInfo!._resetPlayState(destClip._duration * normalizedTime,controllerLayer._crossDuration);
 				else

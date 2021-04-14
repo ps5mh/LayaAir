@@ -7,10 +7,24 @@
 #ifdef COLOR
 	varying vec4 v_Color;
 #endif
-varying vec2 v_Texcoord0;
+
+#ifdef _SCROLL2TEXBLEND_ON
+	varying vec4 v_Texcoord0;
+#else
+	varying vec2 v_Texcoord0;
+#endif
 
 #ifdef MAINTEXTURE
 	uniform sampler2D u_AlbedoTexture;
+#endif
+
+#ifdef SUBTEXTURE
+	uniform sampler2D _SubTex;
+	uniform float _SubTex_Perturbation;
+#endif
+
+#ifdef _ALPHATEST_ON
+	uniform float _Cutoff;
 #endif
 
 uniform vec4 u_AlbedoColor;
@@ -31,7 +45,17 @@ void main()
 		color *= v_Color;
 	#endif
 	#ifdef MAINTEXTURE
-		color *= texture2D(u_AlbedoTexture, v_Texcoord0);
+		color *= texture2D(u_AlbedoTexture, v_Texcoord0.xy);
+	#endif
+
+	#ifdef SUBTEXTURE
+		vec2 uv2 = v_Texcoord0.zw + color.r * _SubTex_Perturbation;
+		color *= texture2D(_SubTex, uv2);
+	#endif
+
+	#ifdef _ALPHATEST_ON
+		if (color.a < _Cutoff)
+			discard;
 	#endif
 	
 	gl_FragColor = color;

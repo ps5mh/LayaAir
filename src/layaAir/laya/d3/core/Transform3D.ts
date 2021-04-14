@@ -234,6 +234,7 @@ export class Transform3D extends EventDispatcher {
 	}
 
 	set localScaleX(value: number) {
+		if (this._localScale.x === value) { return; }
 		this._localScale.x = value;
 		this.localScale = this._localScale;
 	}
@@ -246,6 +247,7 @@ export class Transform3D extends EventDispatcher {
 	}
 
 	set localScaleY(value: number) {
+		if (this._localScale.y === value) { return; }
 		this._localScale.y = value;
 		this.localScale = this._localScale;
 	}
@@ -258,6 +260,7 @@ export class Transform3D extends EventDispatcher {
 	}
 
 	set localScaleZ(value: number) {
+		if (this._localScale.z === value) { return; }
 		this._localScale.z = value;
 		this.localScale = this._localScale;
 	}
@@ -270,6 +273,7 @@ export class Transform3D extends EventDispatcher {
 	}
 
 	set localScale(value: Vector3) {
+		if (this._localScale.x === value.x && this._localScale.y === value.y && this._localScale.z === value.z) { return; }
 		if (this._localScale !== value)
 			value.cloneTo(this._localScale);
 		this._setTransformFlag(Transform3D.TRANSFORM_LOCALMATRIX, true);

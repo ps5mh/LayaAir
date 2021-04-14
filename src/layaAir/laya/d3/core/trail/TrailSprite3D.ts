@@ -106,6 +106,19 @@ export class TrailSprite3D extends RenderableSprite3D {
 	protected _onActive(): void {
 		super._onActive();
 		this._transform.position.cloneTo(this._geometryFilter._lastPosition);//激活时需要重置上次位置
+		// bug fix trail renderer reactive
+		const filter = this._geometryFilter as any;
+		filter._lastPosition.setValue(0, 0, 0)
+		filter._totalLength = 0;
+		filter._curtime = 0;
+		const geometry = filter._trialGeometry;
+		geometry._activeIndex = geometry._endIndex = 0;
+		geometry._vertices1.fill(0)
+		geometry._vertices2.fill(0)
+		geometry._subDistance.fill(0)
+		geometry._subBirthTime.fill(0)
+		geometry._isTempEndVertex = false
+		geometry._disappearBoundsMode = false;
 	}
 
 	/**

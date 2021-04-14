@@ -49,7 +49,9 @@ export class Input3D {
 	 */
 	__init__(canvas: any, scene: Scene3D): void {
 		this._scene = scene;
-		Input3D._tempHitResult0 = new HitResult();
+		if (Physics3D._enablePhysics) {
+			Input3D._tempHitResult0 = new HitResult();
+		}
 		//@ts-ignore
 		canvas.oncontextmenu = function (e: any): any {
 			return false;

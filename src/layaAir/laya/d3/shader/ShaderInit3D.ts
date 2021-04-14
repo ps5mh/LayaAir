@@ -284,7 +284,13 @@ export class ShaderInit3D {
 			'u_SimpleAnimatorTextureSize':Shader3D.PERIOD_SPRITE,
 			'u_FogStart': Shader3D.PERIOD_SCENE,
 			'u_FogRange': Shader3D.PERIOD_SCENE,
-			'u_FogColor': Shader3D.PERIOD_SCENE
+			'u_FogColor': Shader3D.PERIOD_SCENE,
+			'u_Time': Shader3D.PERIOD_SCENE,
+			'_SubTex': Shader3D.PERIOD_MATERIAL,
+			'_SubTex_ST': Shader3D.PERIOD_MATERIAL,
+			'_SubTex_Scroll': Shader3D.PERIOD_MATERIAL,
+			'_SubTex_Perturbation': Shader3D.PERIOD_MATERIAL,
+			'_MainTex_Scroll': Shader3D.PERIOD_MATERIAL
 		};
 		stateMap = {
 			's_Cull': Shader3D.RENDER_STATE_CULL,
@@ -377,7 +383,13 @@ export class ShaderInit3D {
 			'u_Projection': Shader3D.PERIOD_CAMERA,
 			'u_FogStart': Shader3D.PERIOD_SCENE,
 			'u_FogRange': Shader3D.PERIOD_SCENE,
-			'u_FogColor': Shader3D.PERIOD_SCENE
+			'u_FogColor': Shader3D.PERIOD_SCENE,
+			'u_Time': Shader3D.PERIOD_SCENE,
+			'_SubTex': Shader3D.PERIOD_MATERIAL,
+			'_SubTex_ST': Shader3D.PERIOD_MATERIAL,
+			'_SubTex_Scroll': Shader3D.PERIOD_MATERIAL,
+			'_SubTex_Perturbation': Shader3D.PERIOD_MATERIAL,
+			'_MainTex_Scroll': Shader3D.PERIOD_MATERIAL
 		};
 		stateMap = {
 			's_Cull': Shader3D.RENDER_STATE_CULL,
@@ -513,7 +525,13 @@ export class ShaderInit3D {
 			'u_WidthCurve': Shader3D.PERIOD_SPRITE,
 			'u_WidthCurveKeyLength': Shader3D.PERIOD_SPRITE,
 			'u_GradientColorkey': Shader3D.PERIOD_SPRITE,
-			'u_GradientAlphakey': Shader3D.PERIOD_SPRITE
+			'u_GradientAlphakey': Shader3D.PERIOD_SPRITE,
+			'u_Time': Shader3D.PERIOD_SCENE,
+			'_SubTex': Shader3D.PERIOD_MATERIAL,
+			'_SubTex_ST': Shader3D.PERIOD_MATERIAL,
+			'_SubTex_Scroll': Shader3D.PERIOD_MATERIAL,
+			'_SubTex_Perturbation': Shader3D.PERIOD_MATERIAL,
+			'_MainTex_Scroll': Shader3D.PERIOD_MATERIAL
 		};
 		stateMap = {
 			's_Cull': Shader3D.RENDER_STATE_CULL,

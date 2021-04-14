@@ -127,6 +127,9 @@ export class FillTextCmd {
     }
 
     set textAlign(value: string) {
+        if (this._textAlign === value) {
+            return;
+        }
         this._textAlign = value;
         switch (value) {
             case 'center':

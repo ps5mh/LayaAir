@@ -2,6 +2,7 @@ import { ColorFilter } from "../../filters/ColorFilter"
 import { Matrix } from "../../maths/Matrix"
 import { Context } from "../../resource/Context"
 import { Texture } from "../../resource/Texture"
+import { ColorUtils } from "../../utils/ColorUtils"
 import { Pool } from "../../utils/Pool"
 
 /**
@@ -67,9 +68,15 @@ export class DrawTextureCmd {
         cmd.uv = uv==undefined?null:uv;
         if (color) {
             cmd.colorFlt = new ColorFilter();
-            cmd.colorFlt.setColor(color);
+            // cmd.colorFlt.setColor(color);
+            // [AOV] modified to fix bitmap text color, @see texture_ps for more info
+            var c = ColorUtils.create(color).arrColor;
+            cmd.colorFlt.setByMatrix([
+                c[0], 0, 0, 0, 0,
+                0, c[1], 0, 0, 0,
+                0, 0, c[2], 0, 0,
+                0, 0, 0, c[3], 0]);
         }
-
         return cmd;
     }
 
